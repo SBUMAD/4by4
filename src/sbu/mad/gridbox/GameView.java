@@ -24,7 +24,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		getHolder().addCallback(this);
 
 		// This bit gets us the resolution of our device screen
-		WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+		WindowManager wm = (WindowManager) context
+				.getSystemService(Context.WINDOW_SERVICE);
 		Display display = wm.getDefaultDisplay();
 		DisplayMetrics size = new DisplayMetrics();
 		// display.getSize(size);
@@ -37,22 +38,28 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		int squareArea = 4;
 
 		// initialize the grid and the gridmanager
-		SquareGrid grid = new SquareGrid(offset, screenHeight/2 - (screenWidth-offset)/2, screenWidth - offset
-				* 2, squareArea);
+		SquareGrid grid = new SquareGrid(offset, screenHeight / 2
+				- (screenWidth - offset) / 2, screenWidth - offset * 2,
+				squareArea);
 		gridMgr = new GameGridManager(grid);
 		gridMgr.grid = grid;
-		
+
 		// setup the paint
 		p = new Paint();
-		
+
 		// Test text stuff
 		txtMgr = new TextManager();
-		txtMgr.textMap.put("GUI_SCORE", new TextObject("Score:", offset, 100));
-		txtMgr.textMap.put("SCORE", new TextObject("#####", offset+120, 100));
-		txtMgr.textMap.put("GUI_MOVES", new TextObject("Moves:", screenWidth-230, 100));
-		txtMgr.textMap.put("MOVES", new TextObject("###", screenWidth-90, 100));
-		txtMgr.textMap.put("GUI_INSTRUCTIONS", new TextObject("Combine numbers!", offset, screenHeight-100));
-		
+		txtMgr.textMap.put("GUI_SCORE", new TextObject("Score:", offset,
+				(int) (screenHeight * .095)));
+		txtMgr.textMap.put("SCORE", new TextObject("#####",
+				(int) (screenWidth * .35), (int) (screenHeight * .095)));
+		txtMgr.textMap.put("GUI_MOVES", new TextObject("Moves:", offset,
+				(int) (screenHeight * 1.75 * .095)));
+		txtMgr.textMap.put("MOVES", new TextObject("###",
+				(int) (screenWidth * .35), (int) (screenHeight * 1.75 * .095)));
+		txtMgr.textMap.put("GUI_INSTRUCTIONS", new TextObject(
+				"Combine numbers!", offset, (int) (screenHeight * .95)));
+
 	}
 
 	@Override
@@ -63,8 +70,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 		// Render the grid and info
 		gridMgr.grid.render(canvas);
-		
-		// Here is where you should render other objects (buttons, scoreDisplays, etc.)
+
+		// Here is where you should render other objects (buttons,
+		// scoreDisplays, etc.)
 		txtMgr.render(canvas);
 	}
 
@@ -95,12 +103,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 	class PanelThread extends Thread {
 		private SurfaceHolder _surfaceHolder;
-		//private DrawingPanel _panel;
+		// private DrawingPanel _panel;
 		private boolean _run = false;
 
 		public PanelThread(SurfaceHolder surfaceHolder, GameView panel) {
 			_surfaceHolder = surfaceHolder;
-			//_panel = panel;
+			// _panel = panel;
 		}
 
 		public void setRunning(boolean run) { // Allow us to stop the thread
