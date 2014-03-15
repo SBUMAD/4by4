@@ -16,7 +16,7 @@ public class GameGridManager {
 	}
 
 	// Slides all the tiles up
-	public boolean moveUp() {
+	public boolean moveLeft() {
 		boolean flag = false;
 		for (int i = 1; i < grid.tiles.length; i++) {
 			for (int j = 0; j < grid.tiles[i].length; j++) {
@@ -48,7 +48,7 @@ public class GameGridManager {
 	// TODO: Change move methods to return bools so we can increment the # of moves properly in GameView
 	
 	// Slides all the tiles down
-	public void moveDown() {
+	public void moveRight() {
 
 		for (int i = grid.tiles.length - 2; i > -1; i--) {
 			for (int j = 0; j < grid.tiles[i].length; j++) {
@@ -74,7 +74,7 @@ public class GameGridManager {
 	}
 
 	// Slides all the tiles left
-	public void moveLeft() {
+	public void moveUp() {
 
 		for (int j = 0; j < grid.tiles[0].length; j++) {
 			for (int i = 0; i < grid.tiles.length; i++) {
@@ -101,7 +101,7 @@ public class GameGridManager {
 	}
 
 	// Slides all the tiles right
-	public void moveRight() {
+	public void moveDown() {
 		for (int j = grid.tiles[0].length - 1; j >= 0; j--) {
 			for (int i = 0; i < grid.tiles.length; i++) {
 				for (int k = j; k < grid.tiles[0].length - 1; k++) {

@@ -1,27 +1,36 @@
 package sbu.mad.gridbox;
 
+import sbu.mad.gridbox.SimpleGestureFilter.SimpleGestureListener;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.DisplayMetrics;
 import android.view.Display;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.WindowManager;
+import android.widget.Toast;
 
-public class GameView extends SurfaceView implements SurfaceHolder.Callback {
+public class GameView extends SurfaceView implements SimpleGestureListener,
+		SurfaceHolder.Callback {
 
+	private SimpleGestureFilter detector;
 	private PanelThread _thread;
-	GameGridManager gridMgr;
-	TextManager txtMgr;
-	int screenWidth, screenHeight;
+	public GameGridManager gridMgr;
+	public TextManager txtMgr;
+	public int screenWidth, screenHeight;
 	private Paint p;
-	int moves, score;
+	public int moves, score;
 
 	public GameView(Context context) {
 		super(context); // Call super constructor
 		getHolder().addCallback(this);
+
+		// Gesture detection
+		MainActivity host = (MainActivity) this.getContext();
+		detector = new SimpleGestureFilter(host, this);
 
 		// This bit gets us the resolution of our device screen
 		WindowManager wm = (WindowManager) context
@@ -138,5 +147,39 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void onSwipe(int direction) {
+
+		switch (direction) {
+
+		case SimpleGestureFilter.SWIPE_RIGHT:
+			gridMgr.moveRight();
+			break;
+		case SimpleGestureFilter.SWIPE_LEFT:
+			gridMgr.moveLeft();
+			break;
+		case SimpleGestureFilter.SWIPE_DOWN:
+			gridMgr.moveDown();
+			break;
+		case SimpleGestureFilter.SWIPE_UP:
+			gridMgr.moveUp();
+			break;
+
+		}
+	}
+
+	@Override
+	public void onDoubleTap() {
+		// TODO Handle double-tap? maybe to restart the game?
+		Toast.makeText(this.getContext(), "Double Tap", Toast.LENGTH_SHORT)
+				.show();
+	}
+
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent me) {
+		this.detector.onTouchEvent(me);
+		return true;
 	}
 }
