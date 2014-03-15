@@ -10,14 +10,16 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.WindowManager;
 
-public class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
+public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 	private PanelThread _thread;
 	GameGridManager gridMgr;
+	TextManager txtMgr;
 	int screenWidth, screenHeight;
 	private Paint p;
+	int moves, score;
 
-	public DrawingPanel(Context context) {
+	public GameView(Context context) {
 		super(context); // Call super constructor
 		getHolder().addCallback(this);
 
@@ -35,13 +37,22 @@ public class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback 
 		int squareArea = 4;
 
 		// initialize the grid and the gridmanager
-		SquareGrid grid = new SquareGrid(offset, offset+100, screenWidth - offset
+		SquareGrid grid = new SquareGrid(offset, screenHeight/2 - (screenWidth-offset)/2, screenWidth - offset
 				* 2, squareArea);
 		gridMgr = new GameGridManager(grid);
 		gridMgr.grid = grid;
 		
 		// setup the paint
 		p = new Paint();
+		
+		// Test text stuff
+		txtMgr = new TextManager();
+		txtMgr.textMap.put("GUI_SCORE", new TextObject("Score:", offset, 100));
+		txtMgr.textMap.put("SCORE", new TextObject("#####", offset+120, 100));
+		txtMgr.textMap.put("GUI_MOVES", new TextObject("Moves:", screenWidth-230, 100));
+		txtMgr.textMap.put("MOVES", new TextObject("###", screenWidth-90, 100));
+		txtMgr.textMap.put("GUI_INSTRUCTIONS", new TextObject("Combine numbers!", offset, screenHeight-100));
+		
 	}
 
 	@Override
@@ -53,7 +64,8 @@ public class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback 
 		// Render the grid and info
 		gridMgr.grid.render(canvas);
 		
-		// Here is where you should render other objects (buttons, etc)
+		// Here is where you should render other objects (buttons, scoreDisplays, etc.)
+		txtMgr.render(canvas);
 	}
 
 	@Override
@@ -86,7 +98,7 @@ public class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback 
 		//private DrawingPanel _panel;
 		private boolean _run = false;
 
-		public PanelThread(SurfaceHolder surfaceHolder, DrawingPanel panel) {
+		public PanelThread(SurfaceHolder surfaceHolder, GameView panel) {
 			_surfaceHolder = surfaceHolder;
 			//_panel = panel;
 		}

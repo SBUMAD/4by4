@@ -10,22 +10,27 @@ public class GameGridManager {
 		this.resetTiles();
 
 		// Start with a random tile
-		addRandomTiles();
-		addRandomTiles();
+		for (int i = 0; i < grid.rows / 2; i++) {
+			addRandomTiles();
+		}
 	}
 
 	// Slides all the tiles up
-	public void moveUp() {
+	public boolean moveUp() {
+		boolean flag = false;
 		for (int i = 1; i < grid.tiles.length; i++) {
 			for (int j = 0; j < grid.tiles[i].length; j++) {
 				for (int k = i; k > 0; k--) {
+					// if matches
 					if (grid.tiles[k - 1][j].value == 0) {
 						grid.tiles[k - 1][j].setVal(grid.tiles[k][j].value);
 						grid.tiles[k][j].setVal(0);
+						flag = true;
 					} else if (grid.tiles[k - 1][j].value == grid.tiles[k][j].value) {
 						grid.tiles[k - 1][j].value += grid.tiles[k][j].value;
 						grid.tiles[k][j].setVal(0);
 						k = -2;
+						flag = true;
 					} else {
 						k = -2;
 					}
@@ -37,8 +42,11 @@ public class GameGridManager {
 		} else {
 			gameOver();
 		}
+		return flag;
 	}
 
+	// TODO: Change move methods to return bools so we can increment the # of moves properly in GameView
+	
 	// Slides all the tiles down
 	public void moveDown() {
 
