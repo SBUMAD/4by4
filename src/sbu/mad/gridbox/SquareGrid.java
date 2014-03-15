@@ -1,10 +1,8 @@
 package sbu.mad.gridbox;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
-import android.graphics.Rect;
+import android.graphics.Typeface;
 
 public class SquareGrid {
 	public float width;
@@ -28,32 +26,37 @@ public class SquareGrid {
 
 			// now render the number value in the middle of the space
 			for (int j = 0; j < rows; j++) {
-				float tempX = tileWidth * i;
-				float tempY = tileWidth * j;
-				canvas.drawRect(x + tempX, y + tempY, x + tempX + tileWidth, y
-						+ tempY + tileWidth, tiles[i][j].paint);
-				Paint p = new Paint();
-				p.setColor(Color.GREEN);
-				// Draw value
-				if (tiles[i][j].value < 2)
-					canvas.drawText(tiles[i][j].value + "", x + i * tileWidth
-							+ tileWidth / 2, y + j * tileWidth + tileWidth / 2, p);
-			}
-		}
-		// render grid
-		for (int i = 0; i < rows; i++) {
-			canvas.drawLine(x + i * tileWidth, y, x + i * tileWidth, y + width,
-					new Paint());
-			canvas.drawLine(x + 0, y + i * tileWidth, x + width, y + i
-					* tileWidth, new Paint());
-		}
-	}
 
-	public void resetTiles() {
-		for (int i = 0; i < this.rows; i++) {
-			for (int j = 0; j < this.rows; j++) {
-				this.tiles[i][j] = new Tile(0, i, j);
+				// Only render anything if the cell has a value over 0
+				if (tiles[i][j].value > 0) {
+					float tempX = tileWidth * i;
+					float tempY = tileWidth * j;
+					
+					// draw the background color of cell
+					canvas.drawRect(x + tempX, y + tempY,
+									x + tempX + tileWidth, 
+									y + tempY + tileWidth,
+									tiles[i][j].paint);
+
+					// Draw Text Value of the tile
+					// Set up font
+					Paint p = new Paint();
+					p.setTextSize(40);
+					Typeface bold = Typeface.DEFAULT_BOLD;
+					p.setTypeface(bold);
+					// and render value in center of cell
+					canvas.drawText(tiles[i][j].value + "", 
+									x + tempX + tileWidth / 2 - 10, // small adjustments to get text in center of cell
+									y + tempY + tileWidth / 2 + 10,
+									p);
+				}
 			}
+		}
+		
+		// render grid outside (to avoid overlap from cells
+		for (int i = 0; i <= rows; i++) {
+			canvas.drawLine(x + i * tileWidth, y, x + i * tileWidth, y + width, new Paint());
+			canvas.drawLine(x + 0, y + i * tileWidth, x + width, y + i * tileWidth, new Paint());
 		}
 	}
 }

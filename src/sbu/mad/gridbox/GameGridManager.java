@@ -2,28 +2,29 @@ package sbu.mad.gridbox;
 
 public class GameGridManager {
 
-	public SquareGrid grid;
-	public int rows, cols;
-
-	// public GameGridManager(int[][] grid) {
-	// this.grid = grid;
-	// }
+	public SquareGrid grid; // A reference to the grid
 
 	public GameGridManager(SquareGrid grid) {
+		// Init the gridmgr
 		this.grid = grid;
-		this.grid.resetTiles();
+		this.resetTiles();
+
+		// Start with a random tile
+		addRandomTiles();
+		addRandomTiles();
 	}
 
+	// Slides all the tiles up
 	public void moveUp() {
 		for (int i = 1; i < grid.tiles.length; i++) {
 			for (int j = 0; j < grid.tiles[i].length; j++) {
 				for (int k = i; k > 0; k--) {
 					if (grid.tiles[k - 1][j].value == 0) {
-						grid.tiles[k - 1][j].value = grid.tiles[k][j].value;
-						grid.tiles[k][j].value = 0;
+						grid.tiles[k - 1][j].setVal(grid.tiles[k][j].value);
+						grid.tiles[k][j].setVal(0);
 					} else if (grid.tiles[k - 1][j].value == grid.tiles[k][j].value) {
 						grid.tiles[k - 1][j].value += grid.tiles[k][j].value;
-						grid.tiles[k][j].value = 0;
+						grid.tiles[k][j].setVal(0);
 						k = -2;
 					} else {
 						k = -2;
@@ -32,23 +33,24 @@ public class GameGridManager {
 			}
 		}
 		if (!checkIfFull()) {
-			addRandom4();
+			addRandomTiles();
 		} else {
 			gameOver();
 		}
 	}
 
+	// Slides all the tiles down
 	public void moveDown() {
 
 		for (int i = grid.tiles.length - 2; i > -1; i--) {
 			for (int j = 0; j < grid.tiles[i].length; j++) {
 				for (int k = i; k < grid.tiles.length - 1; k++) {
 					if (grid.tiles[k + 1][j].value == 0) {
-						grid.tiles[k + 1][j].value = grid.tiles[k][j].value;
-						grid.tiles[k][j].value = 0;
+						grid.tiles[k + 1][j].setVal(grid.tiles[k][j].value);
+						grid.tiles[k][j].setVal(0);
 					} else if (grid.tiles[k + 1][j].value == grid.tiles[k][j].value) {
 						grid.tiles[k + 1][j].value += grid.tiles[k][j].value;
-						grid.tiles[k][j].value = 0;
+						grid.tiles[k][j].setVal(0);
 						k = grid.tiles.length;
 					} else {
 						k = grid.tiles.length;
@@ -57,23 +59,24 @@ public class GameGridManager {
 			}
 		}
 		if (!checkIfFull()) {
-			addRandom4();
+			addRandomTiles();
 		} else {
 			gameOver();
 		}
 	}
 
+	// Slides all the tiles left
 	public void moveLeft() {
 
 		for (int j = 0; j < grid.tiles[0].length; j++) {
 			for (int i = 0; i < grid.tiles.length; i++) {
 				for (int k = j; k > 0; k--) {
 					if (grid.tiles[i][k - 1].value == 0) {
-						grid.tiles[i][k - 1].value = grid.tiles[i][k].value;
-						grid.tiles[i][k].value = 0;
+						grid.tiles[i][k - 1].setVal(grid.tiles[i][k].value);
+						grid.tiles[i][k].setVal(0);
 					} else if (grid.tiles[i][k - 1].value == grid.tiles[i][k].value) {
 						grid.tiles[i][k - 1].value += grid.tiles[i][k].value;
-						grid.tiles[i][k].value = 0;
+						grid.tiles[i][k].setVal(0);
 						k = -2;
 					} else {
 						k = -1;
@@ -83,22 +86,23 @@ public class GameGridManager {
 		}
 
 		if (!checkIfFull()) {
-			addRandom4();
+			addRandomTiles();
 		} else {
 			gameOver();
 		}
 	}
 
+	// Slides all the tiles right
 	public void moveRight() {
 		for (int j = grid.tiles[0].length - 1; j >= 0; j--) {
 			for (int i = 0; i < grid.tiles.length; i++) {
 				for (int k = j; k < grid.tiles[0].length - 1; k++) {
 					if (grid.tiles[i][k + 1].value == 0) {
-						grid.tiles[i][k + 1].value = grid.tiles[i][k].value;
-						grid.tiles[i][k].value = 0;
+						grid.tiles[i][k + 1].setVal(grid.tiles[i][k].value);
+						grid.tiles[i][k].setVal(0);
 					} else if (grid.tiles[i][k + 1].value == grid.tiles[i][k].value) {
 						grid.tiles[i][k + 1].value += grid.tiles[i][k].value;
-						grid.tiles[i][k].value = 0;
+						grid.tiles[i][k].setVal(0);
 						k = 6;
 					} else {
 						k = 6;
@@ -108,18 +112,20 @@ public class GameGridManager {
 		}
 
 		if (!checkIfFull()) {
-			addRandom4();
+			addRandomTiles();
 		} else {
 			gameOver();
 		}
 	}
 
+	// Handles what to do when there are no more moves
 	public void gameOver() {
 		// System.out.println("Game Over");
-		grid.resetTiles();
+		resetTiles();
 		// grid.printGrid();
 	}
 
+	// Returns true if the game grid is full
 	public boolean checkIfFull() {
 		boolean flag = true;
 		for (int i = 0; i < grid.tiles.length; i++) {
@@ -133,18 +139,30 @@ public class GameGridManager {
 		return flag;
 	}
 
-	public void addRandom4() {
+	// Resets all tiles to 0
+	public void resetTiles() {
+		for (int i = 0; i < grid.rows; i++) {
+			for (int j = 0; j < grid.rows; j++) {
+				grid.tiles[i][j] = new Tile(0, i, j);
+			}
+		}
+	}
+
+	// Adds a base-value tile to an empty cell in the grid
+	public void addRandomTiles() {
 		boolean flag = true;
 		while (flag) {
-			int x = (int) (Math.random() * 4);
-			int y = (int) (Math.random() * 4);
+			int x = (int) (Math.random() * grid.rows);
+			int y = (int) (Math.random() * grid.rows);
 			if (grid.tiles[x][y].value == 0) {
-				grid.tiles[x][y].value = 4;
+				grid.tiles[x][y].setVal(4); // TODO: Maybe set this to different
+											// value, dependent on grid area?
 				flag = false;
 			}
 		}
 	}
 
+	// Returns a string with the layout of the grid's values
 	public String printGrid() {
 		String result = "";
 		for (int i = 0; i < grid.tiles.length; i++) {
